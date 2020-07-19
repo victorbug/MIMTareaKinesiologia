@@ -39,12 +39,24 @@
          if (value != null)
             document.getElementById(fieldName).innerHTML = value.toFixed(precision);
          }  
+      
+      function handleOrientationWrite(event) {//Agregada por Víctor
+      updateFieldIfNotNull('Orientation_b', event.beta);
+      updateFieldIfNotNull('Orientation_g', event.gamma);
+      updateFieldIfNotNull('Orientation_a', event.alpha);
+      }
 
-      function handleMotionWrite(event) {
+      function handleMotionWrite(event) {//Agregada por Víctor
       updateFieldIfNotNull('Accelerometer_x', event.acceleration.x);
       updateFieldIfNotNull('Accelerometer_y', event.acceleration.y);
       updateFieldIfNotNull('Accelerometer_z', event.acceleration.z);
+      
+      updateFieldIfNotNull('Rotation_b', event.rotationRate.beta);
+      updateFieldIfNotNull('Rotation_g', event.rotationRate.gamma);
+      updateFieldIfNotNull('Rotation_a', event.rotationRate.alpha);
       }
+
+
       </script>
 
 
@@ -96,7 +108,7 @@
          post_to_relay({'motion':motion})
          }
 
-         function handleClick(event) {//Agregada por Victor
+         function handleClick(event) {//Agregada por Víctor
          //document.body.style.backgroundColor = "red"
          alert({'click':clicks});
          var clicks = {
@@ -108,9 +120,10 @@
 
          window.addEventListener("deviceorientation", handleOrientation, true);
          window.addEventListener("devicemotion", handleMotion, true);
-         window.addEventListener("click", handleClick, true)//Agregada por Victor
+         window.addEventListener("click", handleClick, true)//Agregada por Víctor
 
-         window.addEventListener("devicemotion", handleMotionWrite, true);
+         window.addEventListener("deviceorientation", handleOrientationWrite, true);//Agregada por Víctor
+         window.addEventListener("devicemotion", handleMotionWrite, true);//Agregada por Víctor
 
       </script>
    </body>
