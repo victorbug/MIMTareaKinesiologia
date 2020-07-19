@@ -9,6 +9,7 @@
    <body>
       <main role="main" class="container"></main>
       <div class="p-3 mb-2 bg-secondary" id="demo-div"></div>
+      <p style="margin-top:1rem;">Num. of datapoints: <span class="badge badge-warning" id="num-observed-events">0</span></p>
 
       <h4>Orientation</h4>
       <ul>
@@ -93,7 +94,7 @@
          }
          console.log(orientation)
          post_to_relay({'orientation':orientation})
-         
+         incrementEventCount();
          }
          function handleMotion(event) {
          var motion = {
@@ -106,6 +107,13 @@
          }
          console.log(motion)
          post_to_relay({'motion':motion})
+         incrementEventCount();
+         }
+
+         function incrementEventCount(){//CONTADOR DE DATOS
+         let counterElement = document.getElementById("num-observed-events")
+         let eventCount = parseInt(counterElement.innerHTML)
+         counterElement.innerHTML = eventCount + 1;
          }
 
          function handleClick(event) {//Agregada por Víctor
