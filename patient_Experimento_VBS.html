@@ -13,6 +13,8 @@
       <p style="margin-top:1rem;">Num. of datapoints Handled: <span class="badge badge-warning" id="num-handled-events">0</span></p>
       <p style="margin-top:1rem;">lastMove_orientation: <span class="badge badge-warning" id="lastMove_orientation_id">0</span></p>
       <p style="margin-top:1rem;">lastMove_motion: <span class="badge badge-warning" id="lastMove_motion_id">0</span></p>
+      <p style="margin-top:1rem;">lastMove_orientation_HANDLED: <span class="badge badge-warning" id="lastMove_motion_HANDLED_id">0</span></p>
+      <p style="margin-top:1rem;">lastMove_motion_HANDLED: <span class="badge badge-warning" id="lastMove_motion_HADNLED_id">0</span></p>
       <h5>HOLA</h5>
 
       <h4>Orientation</h4>
@@ -36,6 +38,27 @@
          <li>Z-axis (&alpha;): <span id="Rotation_a">0</span><span>&deg;</span></li>
       </ul>
 
+      <h4>Orientation-HANDLED</h4>
+      <ul>
+         <li>X-axis (&beta;): <span id="Orientation_b_HANDLED">0</span><span>&deg;</span></li>
+         <li>Y-axis (&gamma;): <span id="Orientation_g_HANDLED">0</span><span>&deg;</span></li>
+         <li>Z-axis (&alpha;): <span id="Orientation_a_HANDLED">0</span><span>&deg;</span></li>
+      </ul>
+      
+      <h4>Acceleration-HANDLED</h4>
+      <ul>
+         <li>X-axis: <span id="Accelerometer_x_HANDLED">0</span><span> m/s<sup>2</sup></span></li>
+         <li>Y-axis: <span id="Accelerometer_y_HANDLED">0</span><span> m/s<sup>2</sup></span></li>
+         <li>Z-axis: <span id="Accelerometer_z_HANDLED">0</span><span> m/s<sup>2</sup></span></li>
+      </ul>
+
+      <h4>Rotation-HANDLED</h4>
+      <ul>
+         <li>X-axis (&beta;): <span id="Rotation_b_HANDLED">0</span><span>&deg;</span></li>
+         <li>Y-axis (&gamma;): <span id="Rotation_g_HANDLED">0</span><span>&deg;</span></li>
+         <li>Z-axis (&alpha;): <span id="Rotation_a_HANDLED">0</span><span>&deg;</span></li>
+      </ul>
+
       <p>Experimento</p>
       <img src="dinosaurio.jpg">
 
@@ -45,13 +68,13 @@
             document.getElementById(fieldName).innerHTML = value.toFixed(precision);
          }  
       
-      function handleOrientationWrite(event) {//Agregada por Víctor
+      function handleOrientationWriteListener(event) {//Agregada por Víctor
       updateFieldIfNotNull('Orientation_b', event.beta);
       updateFieldIfNotNull('Orientation_g', event.gamma);
       updateFieldIfNotNull('Orientation_a', event.alpha);
       }
 
-      function handleMotionWrite(event) {//Agregada por Víctor
+      function handleMotionWriteListener(event) {//Agregada por Víctor
       updateFieldIfNotNull('Accelerometer_x', event.acceleration.x);
       updateFieldIfNotNull('Accelerometer_y', event.acceleration.y);
       updateFieldIfNotNull('Accelerometer_z', event.acceleration.z);
@@ -60,9 +83,38 @@
       updateFieldIfNotNull('Rotation_g', event.rotationRate.gamma);
       updateFieldIfNotNull('Rotation_a', event.rotationRate.alpha);
       }
-
-
       </script>
+
+      <script>//HANDLED
+      
+      var lastMove_orientation_HANDLED = 0;
+      function handleOrientationWriteListener_HANDLED(event) {//Agregada por Víctor
+         document.getElementById("lastMove_motion_HANDLED_id").innerHTML = Date.now()-lastMove_orientation_HANDLED;
+         if(Date.now() - lastMove_orientation_HANDLED > 1000) {
+            updateFieldIfNotNull('Orientation_b', event.beta);
+            updateFieldIfNotNull('Orientation_g', event.gamma);
+            updateFieldIfNotNull('Orientation_a', event.alpha);
+            lastMove_orientation_HANDLED = Date.now();
+            }
+         }
+
+      var lastMove_motion_HANDLED = 0;
+      function handleMotionWriteListener_HANDLED(event) {//Agregada por Víctor    
+         document.getElementById("lastMove_motion_HADNLED_id").innerHTML = Date.now()-lastMove_motion_HANDLED;  
+         if(Date.now() - lastMove_motion_HANDLED > 1000) {
+            updateFieldIfNotNull('Accelerometer_x', event.acceleration.x);
+            updateFieldIfNotNull('Accelerometer_y', event.acceleration.y);
+            updateFieldIfNotNull('Accelerometer_z', event.acceleration.z);
+            
+            updateFieldIfNotNull('Rotation_b', event.rotationRate.beta);
+            updateFieldIfNotNull('Rotation_g', event.rotationRate.gamma);
+            updateFieldIfNotNull('Rotation_a', event.rotationRate.alpha);
+            lastMove_motion_HANDLED = Date.now();
+         }
+      }
+      </script>
+      
+
 
 
       <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -89,7 +141,7 @@
          });         
          }
          
-         var lastMove_orientation = 0;
+         var lastMove_orientation = 0;//No se como es la dinamica de esta variable
          function handleOrientation(event) {
             incrementEventCount();
             document.getElementById("lastMove_orientation_id").innerHTML = Date.now()-lastMove_orientation;
@@ -154,8 +206,11 @@
          window.addEventListener("devicemotion", handleMotion, true);
          window.addEventListener("click", handleClick, true)//Agregada por Víctor
 
-         window.addEventListener("deviceorientation", handleOrientationWrite, true);//Agregada por Víctor
-         window.addEventListener("devicemotion", handleMotionWrite, true);//Agregada por Víctor
+         window.addEventListener("deviceorientation", handleOrientationWriteListener, true);//Agregada por Víctor
+         window.addEventListener("devicemotion", handleMotionWriteListener, true);//Agregada por Víctor
+
+         window.addEventListener("deviceorientation", handleOrientationWriteListener_HANDLED, true);//Agregada por Víctor
+         window.addEventListener("devicemotion", handleMotionWriteListener_HANDLED, true);//Agregada por Víctor
 
       </script>
    </body>
