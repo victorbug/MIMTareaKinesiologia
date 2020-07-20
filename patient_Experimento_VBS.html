@@ -88,7 +88,7 @@
       </script>
 
       <script>//ACA SON LAS QUE SOLO ACTUALIZAN DATOS SEGUN UNA REGLA PARA NO ENVIAR MUCHOS
-            
+
       var lastMove_orientation_HANDLED = 0;
       function handleOrientationWriteListener_HANDLED(event) {//Agregada por Víctor         
          if(Date.now() - lastMove_orientation_HANDLED > 1000) {
@@ -144,7 +144,7 @@
          }
          
          var lastMove_orientation = 0;//No se como es la dinamica de esta variable
-         function handleOrientation(event) {
+         function handleOrientation_Enviar(event) {
             incrementEventCount();
             document.getElementById("lastMove_orientation_id").innerHTML = Date.now()-lastMove_orientation;
             if(Date.now() - lastMove_orientation > 1000) {
@@ -161,7 +161,7 @@
          }
 
          var lastMove_motion = 0;
-         function handleMotion(event) {   
+         function handleMotion_Enviar(event) {   
             incrementEventCount();  
             document.getElementById("lastMove_motion_id").innerHTML = Date.now()-lastMove_motion;      
             if(Date.now() - lastMove_motion > 1000) {
@@ -204,8 +204,8 @@
 
 
          
-         window.addEventListener("deviceorientation", handleOrientation, true);
-         window.addEventListener("devicemotion", handleMotion, true);
+         window.addEventListener("deviceorientation", handleOrientation_Enviar, true);
+         window.addEventListener("devicemotion", handleMotion_Enviar, true);
          window.addEventListener("click", handleClick, true)//Agregada por Víctor
 
          window.addEventListener("deviceorientation", handleOrientationWriteListener, true);//Agregada por Víctor
