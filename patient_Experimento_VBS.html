@@ -91,7 +91,7 @@
          
          var lastMove_orientation = 0;
          function handleOrientation(event) {
-            document.getElementById("lastMove_orientation_id").innerHTML = lastMove_orientation;
+            document.getElementById("lastMove_orientation_id").innerHTML = Date.now()-lastMove_orientation;
             if(Date.now() - lastMove_orientation > 40) {
                var orientation = {
                   'alpha':event.alpha,
@@ -107,7 +107,7 @@
 
          var lastMove_motion = 0;
          function handleMotion(event) {     
-            document.getElementById("lastMove_motion_id").innerHTML = lastMove_motion;      
+            document.getElementById("lastMove_motion_id").innerHTML = Date.now()-lastMove_motion;      
             if(Date.now() - lastMove_motion > 40) {
                var motion = {
                   'acceleration_x':event.acceleration.x,
