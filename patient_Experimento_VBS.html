@@ -10,13 +10,13 @@
       <main role="main" class="container"></main>
       <div class="p-3 mb-2 bg-secondary" id="demo-div"></div>
       <p style="margin-top:1rem;">Num. of datapoints Listener: <span class="badge badge-warning" id="num-observed-events">0</span></p>
-      <p style="margin-top:1rem;">Num. of datapoints Handled: <span class="badge badge-warning" id="num-handled-events">0</span></p>
-      <p style="margin-top:1rem;">lastMove_orientation: <span class="badge badge-warning" id="lastMove_orientation_id">0</span></p>
-      <p style="margin-top:1rem;">lastMove_motion: <span class="badge badge-warning" id="lastMove_motion_id">0</span></p>
-      <p style="margin-top:1rem;">lastMove_orientation_HANDLED: <span class="badge badge-warning" id="lastMove_orientation_HANDLED_id">0</span></p>
-      <p style="margin-top:1rem;">lastMove_motion_HANDLED: <span class="badge badge-warning" id="lastMove_motion_HADNLED_id">0</span></p>
-      <h5>HOLA</h5>
-
+      <p style="margin-top:1rem;">Num. of datapoints HANDLED: <span class="badge badge-warning" id="num-handled-events">0</span></p>
+      <p style="margin-top:1rem;">Date lastMove_orientation_Listener: <span class="badge badge-warning" id="date_lastMove_orientation_id">0</span></p>
+      <p style="margin-top:1rem;">Date lastMove_motion_Listener: <span class="badge badge-warning" id="date_lastMove_motion_id">0</span></p>
+      <p style="margin-top:1rem;">DateDiff lastMove_orientation_Listener_HANDLED: <span class="badge badge-warning" id="datediff_lastMove_orientation_HANDLED_id">0</span></p>
+      <p style="margin-top:1rem;">DateDiff lastMove_motion_Listener_HANDLED: <span class="badge badge-warning" id="datediff_lastMove_motion_HADNLED_id">0</span></p>
+      
+      <h3>Datos Listened</h3>
       <h4>Orientation</h4>
       <ul>
          <li>X-axis (&beta;): <span id="Orientation_b">0</span><span>&deg;</span></li>
@@ -38,6 +38,7 @@
          <li>Z-axis (&alpha;): <span id="Rotation_a">0</span><span>&deg;</span></li>
       </ul>
 
+      <h3>Datos Listened HANDLED</h3>
       <h4>Orientation-HANDLED</h4>
       <ul>
          <li>X-axis (&beta;): <span id="Orientation_b_HANDLED">0</span><span>&deg;</span></li>
@@ -91,8 +92,9 @@
 
       var lastMove_orientation_HANDLED = 0;
       function handleOrientationWriteListener_HANDLED(event) {//Agregada por Víctor         
+         document.getElementById("date_lastMove_orientation_id").innerHTML = lastMove_orientation_HANDLED;
          if(Date.now() - lastMove_orientation_HANDLED > 1000) {
-            document.getElementById("lastMove_orientation_HANDLED_id").innerHTML = Date.now()-lastMove_orientation_HANDLED;
+            document.getElementById("datediff_lastMove_orientation_HANDLED_id").innerHTML = Date.now()-lastMove_orientation_HANDLED;
             updateFieldIfNotNull('Orientation_b_HANDLED', event.beta);
             updateFieldIfNotNull('Orientation_g_HANDLED', event.gamma);
             updateFieldIfNotNull('Orientation_a_HANDLED', event.alpha);
@@ -102,8 +104,9 @@
 
       var lastMove_motion_HANDLED = 0;
       function handleMotionWriteListener_HANDLED(event) {//Agregada por Víctor             
+         document.getElementById("date_lastMove_motion_id").innerHTML = lastMove_motion_HANDLED;  
          if(Date.now() - lastMove_motion_HANDLED > 1000) {
-            document.getElementById("lastMove_motion_HADNLED_id").innerHTML = Date.now()-lastMove_motion_HANDLED;  
+            document.getElementById("datediff_lastMove_motion_HADNLED_id").innerHTML = Date.now()-lastMove_motion_HANDLED;  
             updateFieldIfNotNull('Accelerometer_x_HANDLED', event.acceleration.x);
             updateFieldIfNotNull('Accelerometer_y_HANDLED', event.acceleration.y);
             updateFieldIfNotNull('Accelerometer_z_HANDLED', event.acceleration.z);
@@ -143,11 +146,10 @@
          });         
          }
          
-         var lastMove_orientation = 0;//No se como es la dinamica de esta variable
+         var lastMove_orientation_enviar = 0;//No se como es la dinamica de esta variable
          function handleOrientation_Enviar(event) {
-            incrementEventCount();
-            document.getElementById("lastMove_orientation_id").innerHTML = Date.now()-lastMove_orientation;
-            if(Date.now() - lastMove_orientation > 1000) {
+            incrementEventCount();            
+            if(Date.now() - lastMove_orientation_enviar > 1000) {
                var orientation = {
                   'alpha':event.alpha,
                   'beta':event.beta,
@@ -155,16 +157,15 @@
                }
                console.log(orientation)
                post_to_relay({'orientation':orientation})               
-               lastMove_orientation = Date.now();
+               lastMove_orientation_enviar = Date.now();
                incrementHandledCount();
             }
          }
 
-         var lastMove_motion = 0;
+         var lastMove_motion_enviar = 0;
          function handleMotion_Enviar(event) {   
-            incrementEventCount();  
-            document.getElementById("lastMove_motion_id").innerHTML = Date.now()-lastMove_motion;      
-            if(Date.now() - lastMove_motion > 1000) {
+            incrementEventCount();           
+            if(Date.now() - lastMove_motion_enviar > 1000) {
                var motion = {
                   'acceleration_x':event.acceleration.x,
                   'acceleration_y':event.acceleration.y,
@@ -175,7 +176,7 @@
                }            
                console.log(motion)
                post_to_relay({'motion':motion})               
-               lastMove_motion = Date.now();
+               lastMove_motion_enviar = Date.now();
                incrementHandledCount();
             }
          }
