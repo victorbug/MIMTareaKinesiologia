@@ -13,7 +13,7 @@
       <p style="margin-top:1rem;">Num. of datapoints Handled: <span class="badge badge-warning" id="num-handled-events">0</span></p>
       <p style="margin-top:1rem;">lastMove_orientation: <span class="badge badge-warning" id="lastMove_orientation_id">0</span></p>
       <p style="margin-top:1rem;">lastMove_motion: <span class="badge badge-warning" id="lastMove_motion_id">0</span></p>
-      <p style="margin-top:1rem;">lastMove_orientation_HANDLED: <span class="badge badge-warning" id="lastMove_motion_HANDLED_id">0</span></p>
+      <p style="margin-top:1rem;">lastMove_orientation_HANDLED: <span class="badge badge-warning" id="lastMove_orientation_HANDLED_id">0</span></p>
       <p style="margin-top:1rem;">lastMove_motion_HANDLED: <span class="badge badge-warning" id="lastMove_motion_HADNLED_id">0</span></p>
       <h5>HOLA</h5>
 
@@ -67,7 +67,9 @@
          if (value != null)
             document.getElementById(fieldName).innerHTML = value.toFixed(precision);
          }  
-      
+      </script>
+
+      <script>//ACA VAN LAS QUE ACTUALIZAN LOS DATOS EN TODO INSTANTE
       function handleOrientationWriteListener(event) {//Agregada por Víctor
       updateFieldIfNotNull('Orientation_b', event.beta);
       updateFieldIfNotNull('Orientation_g', event.gamma);
@@ -85,30 +87,30 @@
       }
       </script>
 
-      <script>//HANDLED
-      
+      <script>//ACA SON LAS QUE SOLO ACTUALIZAN DATOS SEGUN UNA REGLA PARA NO ENVIAR MUCHOS
+            
       var lastMove_orientation_HANDLED = 0;
-      function handleOrientationWriteListener_HANDLED(event) {//Agregada por Víctor
-         document.getElementById("lastMove_motion_HANDLED_id").innerHTML = Date.now()-lastMove_orientation_HANDLED;
+      function handleOrientationWriteListener_HANDLED(event) {//Agregada por Víctor         
          if(Date.now() - lastMove_orientation_HANDLED > 1000) {
-            updateFieldIfNotNull('Orientation_b', event.beta);
-            updateFieldIfNotNull('Orientation_g', event.gamma);
-            updateFieldIfNotNull('Orientation_a', event.alpha);
+            document.getElementById("lastMove_orientation_HANDLED_id").innerHTML = Date.now()-lastMove_orientation_HANDLED;
+            updateFieldIfNotNull('Orientation_b_HANDLED', event.beta);
+            updateFieldIfNotNull('Orientation_g_HANDLED', event.gamma);
+            updateFieldIfNotNull('Orientation_a_HANDLED', event.alpha);
             lastMove_orientation_HANDLED = Date.now();
             }
          }
 
       var lastMove_motion_HANDLED = 0;
-      function handleMotionWriteListener_HANDLED(event) {//Agregada por Víctor    
-         document.getElementById("lastMove_motion_HADNLED_id").innerHTML = Date.now()-lastMove_motion_HANDLED;  
+      function handleMotionWriteListener_HANDLED(event) {//Agregada por Víctor             
          if(Date.now() - lastMove_motion_HANDLED > 1000) {
-            updateFieldIfNotNull('Accelerometer_x', event.acceleration.x);
-            updateFieldIfNotNull('Accelerometer_y', event.acceleration.y);
-            updateFieldIfNotNull('Accelerometer_z', event.acceleration.z);
+            document.getElementById("lastMove_motion_HADNLED_id").innerHTML = Date.now()-lastMove_motion_HANDLED;  
+            updateFieldIfNotNull('Accelerometer_x_HANDLED', event.acceleration.x);
+            updateFieldIfNotNull('Accelerometer_y_HANDLED', event.acceleration.y);
+            updateFieldIfNotNull('Accelerometer_z_HANDLED', event.acceleration.z);
             
-            updateFieldIfNotNull('Rotation_b', event.rotationRate.beta);
-            updateFieldIfNotNull('Rotation_g', event.rotationRate.gamma);
-            updateFieldIfNotNull('Rotation_a', event.rotationRate.alpha);
+            updateFieldIfNotNull('Rotation_b_HANDLED', event.rotationRate.beta);
+            updateFieldIfNotNull('Rotation_g_HANDLED', event.rotationRate.gamma);
+            updateFieldIfNotNull('Rotation_a_HANDLED', event.rotationRate.alpha);
             lastMove_motion_HANDLED = Date.now();
          }
       }
