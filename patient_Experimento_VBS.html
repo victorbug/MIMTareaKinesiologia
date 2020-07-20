@@ -91,24 +91,26 @@
          
          var lastMove_orientation = 0;
          function handleOrientation(event) {
+            incrementEventCount();
             document.getElementById("lastMove_orientation_id").innerHTML = Date.now()-lastMove_orientation;
-            if(Date.now() - lastMove_orientation > 40) {
+            if(Date.now() - lastMove_orientation > 1000) {
                var orientation = {
                   'alpha':event.alpha,
                   'beta':event.beta,
                   'gamma':event.gamma
                }
                console.log(orientation)
-               post_to_relay({'orientation':orientation})
-               incrementEventCount();
+               post_to_relay({'orientation':orientation})               
                lastMove_orientation = Date.now();
+               incrementHandledCount();
             }
          }
 
          var lastMove_motion = 0;
-         function handleMotion(event) {     
+         function handleMotion(event) {   
+            incrementEventCount();  
             document.getElementById("lastMove_motion_id").innerHTML = Date.now()-lastMove_motion;      
-            if(Date.now() - lastMove_motion > 40) {
+            if(Date.now() - lastMove_motion > 1000) {
                var motion = {
                   'acceleration_x':event.acceleration.x,
                   'acceleration_y':event.acceleration.y,
@@ -118,9 +120,9 @@
                   'rotation_gamma':event.rotationRate.gamma,
                }            
                console.log(motion)
-               post_to_relay({'motion':motion})
-               incrementEventCount();
+               post_to_relay({'motion':motion})               
                lastMove_motion = Date.now();
+               incrementHandledCount();
             }
          }
 
