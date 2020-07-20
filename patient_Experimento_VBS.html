@@ -11,6 +11,9 @@
       <div class="p-3 mb-2 bg-secondary" id="demo-div"></div>
       <p style="margin-top:1rem;">Num. of datapoints Listener: <span class="badge badge-warning" id="num-observed-events">0</span></p>
       <p style="margin-top:1rem;">Num. of datapoints Handled: <span class="badge badge-warning" id="num-handled-events">0</span></p>
+      <p style="margin-top:1rem;">lastMove_orientation: <span class="badge badge-warning" id="lastMove_orientation_id">0</span></p>
+      <p style="margin-top:1rem;">lastMove_motion: <span class="badge badge-warning" id="lastMove_motion_id">0</span></p>
+
 
       <h4>Orientation</h4>
       <ul>
@@ -86,29 +89,39 @@
          });         
          }
          
+         var lastMove_orientation = 0;
          function handleOrientation(event) {
-         
-         var orientation = {
-             'alpha':event.alpha,
-             'beta':event.beta,
-             'gamma':event.gamma
+            document.getElementById("lastMove_orientation_id").innerHTML = lastMove_orientation;
+            if(Date.now() - lastMove_orientation > 40) {
+               var orientation = {
+                  'alpha':event.alpha,
+                  'beta':event.beta,
+                  'gamma':event.gamma
+               }
+               console.log(orientation)
+               post_to_relay({'orientation':orientation})
+               incrementEventCount();
+               lastMove_orientation = Date.now();
+            }
          }
-         console.log(orientation)
-         post_to_relay({'orientation':orientation})
-         incrementEventCount();
-         }
-         function handleMotion(event) {
-         var motion = {
-             'acceleration_x':event.acceleration.x,
-             'acceleration_y':event.acceleration.y,
-             'acceleration_z':event.acceleration.z,
-             'rotation_alpha':event.rotationRate.alpha,
-             'rotation_beta':event.rotationRate.beta,
-             'rotation_gamma':event.rotationRate.gamma,
-         }
-         console.log(motion)
-         post_to_relay({'motion':motion})
-         incrementEventCount();
+
+         var lastMove_motion = 0;
+         function handleMotion(event) {     
+            document.getElementById("lastMove_motion_id").innerHTML = lastMove_motion;      
+            if(Date.now() - lastMove_motion > 40) {
+               var motion = {
+                  'acceleration_x':event.acceleration.x,
+                  'acceleration_y':event.acceleration.y,
+                  'acceleration_z':event.acceleration.z,
+                  'rotation_alpha':event.rotationRate.alpha,
+                  'rotation_beta':event.rotationRate.beta,
+                  'rotation_gamma':event.rotationRate.gamma,
+               }            
+               console.log(motion)
+               post_to_relay({'motion':motion})
+               incrementEventCount();
+               lastMove_motion = Date.now();
+            }
          }
 
          function incrementEventCount(){//CONTADOR DE DATOS
@@ -133,6 +146,8 @@
          post_to_relay({'click':clicks})         
          }
 
+
+         
          window.addEventListener("deviceorientation", handleOrientation, true);
          window.addEventListener("devicemotion", handleMotion, true);
          window.addEventListener("click", handleClick, true)//Agregada por Víctor
