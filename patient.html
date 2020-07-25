@@ -101,21 +101,25 @@ border-radius: 100%;
          }
          
          var limitarEnviosRelay_Orientation=0;
+         var lista_Orientation=[];
          function handleOrientation(event) {   
-            if(Date.now() - limitarEnviosRelay_Orientation > 1000) {      
-               var orientation = {
+            var orientation = {
                   'alpha':event.alpha,
                   'beta':event.beta,
                   'gamma':event.gamma
                }
+            lista_Orientation.push(orientation)
             console.log(orientation)
-            post_to_relay({'orientation':orientation})
-            limitarEnviosRelay_Orientation = Date.now();
+            if(Date.now() - limitarEnviosRelay_Orientation > 1000) {             
+               post_to_relay({'orientationLista':lista_Orientation})
+               post_to_relay({'orientation':orientation})
+               limitarEnviosRelay_Orientation = Date.now();
+               lista_Orientation=[];
             }
          }
 
          var limitarEnviosRelay_Motion=0;
-         var lista_motion=[];
+         var lista_Motion=[];
          function handleMotion(event) {
             var motion = {
                   'acceleration_x':event.acceleration.x,
@@ -125,31 +129,30 @@ border-radius: 100%;
                   'rotation_beta':event.rotationRate.beta,
                   'rotation_gamma':event.rotationRate.gamma,
                }
-            lista_motion.push(motion)
+            lista_Motion.push(motion)
             console.log(motion)
-
             if(Date.now() - limitarEnviosRelay_Motion > 1000) {   //Enviar todo junto cada un segundo
-            post_to_relay({'motionLista':lista_motion})
-            post_to_relay({'motionOriginal':motion})
-            limitarEnviosRelay_Motion = Date.now();//Resetear variable
-            lista_motion=[];//Resetear variable
+               post_to_relay({'motionLista':lista_Motion})
+               post_to_relay({'motion':motion})
+               limitarEnviosRelay_Motion = Date.now();//Resetear variable
+               lista_motion=[];//Resetear variable
             }         
          }
          
-         var dict = [];
-         function handleClick(event) {//Agregada por Víctor
-               dict.push({
-                           key:   "keyName",
-                           value: "the value"
-                        });
-         post_to_relay({'PruebaVic':dict})
-         console.log("hola")       
-         }
+         //var dict = [];
+         //function handleClick(event) {//Agregada por Víctor
+         //      dict.push({
+         //                  key:   "keyName",
+         //                  value: "the value"
+         //               });
+         //post_to_relay({'PruebaVic':dict})
+         //console.log("hola")       
+         //}
 
          window.addEventListener("deviceorientation", handleOrientation, true);
          window.addEventListener("devicemotion", handleMotion, true);
          window.addEventListener('deviceorientation', handleBolita, true);
-         window.addEventListener("click", handleClick, true)//Agregada por Víctor
+         //window.addEventListener("click", handleClick, true)//Agregada por Víctor
 
       </script>
    </body>
