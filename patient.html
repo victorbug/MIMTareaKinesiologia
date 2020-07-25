@@ -130,6 +130,7 @@ border-radius: 100%;
 
             if(Date.now() - limitarEnviosRelay_Motion > 1000) {   //Enviar todo junto cada un segundo
             post_to_relay({'motionLista':lista_motion})
+            post_to_relay({'motionOriginal':motion})
             limitarEnviosRelay_Motion = Date.now();//Resetear variable
             lista_motion=[];//Resetear variable
             }         
