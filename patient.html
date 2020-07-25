@@ -115,9 +115,9 @@ border-radius: 100%;
          }
 
          var limitarEnviosRelay_Motion=0;
+         var lista_motion=[];
          function handleMotion(event) {
-            if(Date.now() - limitarEnviosRelay_Motion > 1000) {      
-               var motion = {
+            var motion = {
                   'acceleration_x':event.acceleration.x,
                   'acceleration_y':event.acceleration.y,
                   'acceleration_z':event.acceleration.z,
@@ -125,14 +125,30 @@ border-radius: 100%;
                   'rotation_beta':event.rotationRate.beta,
                   'rotation_gamma':event.rotationRate.gamma,
                }
+            lista_motion.push(motion)
             console.log(motion)
-            post_to_relay({'motion':motion})
-            limitarEnviosRelay_Motion = Date.now();
+
+            if(Date.now() - limitarEnviosRelay_Motion > 1000) {   //Enviar todo junto cada un segundo
+            post_to_relay({'motion':lista_motion})
+            limitarEnviosRelay_Motion = Date.now();//Resetear variable
             }
+         var lista_motion=[];//Resetear variable
          }
+         
+         var dict = [];
+         function handleClick(event) {//Agregada por Víctor
+               dict.push({
+                           key:   "keyName",
+                           value: "the value"
+                        });
+         post_to_relay({'PruebaVic':dict})
+         console.log("hola")       
+         }
+
          window.addEventListener("deviceorientation", handleOrientation, true);
          window.addEventListener("devicemotion", handleMotion, true);
          window.addEventListener('deviceorientation', handleBolita, true);
+         window.addEventListener("click", handleClick, true)//Agregada por Víctor
 
       </script>
    </body>
