@@ -190,6 +190,22 @@ const api = new JitsiMeetExternalAPI(domain, options);
 <div id="meet">
     meeting
 </div>
+<button id="myButton">Download</button>
+<script>
 
+const getReport = async function() {
+    const res = await response;
+    const json = await res.json;
+
+
+}
+
+(function() {
+    // button click
+    const button = document.getElementById('myButton');
+    button.addEventListener('click', getReport);
+})();
+
+</script>
    </body>
 </html>
