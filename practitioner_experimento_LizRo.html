@@ -171,20 +171,7 @@
                 }
                 
              });
-            
-                const objectToCsv = function(data) {
-                    const csvRows = [];
-
-                    const headers = Object.keys(data[0]);
-                    csvRows.push(headers.join(','));
-
-                    for(const row of data){
-                        const values = headers.map(header =>{
-                            return row[header]
-                        });
-                    }
-                };
-
+           
          })( window.jQuery );
          
          
