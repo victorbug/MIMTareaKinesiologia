@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <link href="/static/build/styles/samples.37902ba3b7fe.css" rel="stylesheet" type="text/css" />
+        
+      <style type="text/css">
+          .garden {
+position: relative;
+width : 200px;
+height: 200px;
+border: 5px solid #CCC;
+border-radius: 10px;
+}
+
+.ball {
+position: absolute;
+top   : 90px;
+left  : 90px;
+width : 20px;
+height: 20px;
+background: teal;
+border-radius: 100%;
+}
+
+      </style>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Patient</title>
+      <h1>Instrucciones de uso</h1>
+      <p>Antes de iniciar la prueba, ponga el celular sobre una superficie
+          plana durante 30 segundos </p>
+      <p>Cuando su kinesólogo/a se lo indique, asegúrese de mantener el celular
+          en la posición indicada en la imagen durante la prueba,
+          además mantenga el celular lo más pegado a su cuerpo posible. </p>
+      <img src="http://desarrolloware.com/site/images/portafolio/mobile.png" alt="" width="200" height="200" />
+
+   </head>
+   <body>
+
+      <h1>"La bolita"</h1>
+      <p> Dentro del recuadro usted podrá ver una bolita de color verde, 
+         fíjese que la bolita refleja los movimientos de su celular, es decir, 
+         podrá ver los movimuentos que realiza mientras se encuentra con su kinesiólogo. </p>
+      <div class="garden">
+         <div class="ball"></div>
+       </div>
+       
+       <pre class="output"></pre>
+       
+                   <script>
+                       var ball   = document.querySelector('.ball');
+       var garden = document.querySelector('.garden');
+       var output = document.querySelector('.output');
+       
+       var maxX = garden.clientWidth  - ball.clientWidth;
+       var maxY = garden.clientHeight - ball.clientHeight;
+       
+       function handleBolita(event) {
+         var x = event.beta;  // In degree in the range [-180,180]
+         var y = event.gamma; // In degree in the range [-90,90]
+       
+         // Because we don't want to have the device upside down
+         // We constrain the x value to the range [-90,90]
+         if (x >  90) { x =  90};
+         if (x < -90) { x = -90};
+       
+         // To make computation easier we shift the range of 
+         // x and y to [0,180]
+         x += 90;
+         y += 90;
+       
+         // 10 is half the size of the ball
+         // It center the positioning point to the center of the ball
+         ball.style.top  = (maxY*y/180 - 10) + "px";
+         ball.style.left = (maxX*x/180 - 10) + "px";
+       }       
+      </script>
+   
+      <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+      <script src="https://richtr.github.io/NoSleep.js/dist/NoSleep.min.js"></script>
+      <script>
+         var noSleep = new NoSleep();
+         
+         var wakeLockEnabled = false;
+         document.addEventListener('click', function() {
+             noSleep.enable(); // keep the screen on!
+             wakeLockEnabled = true;
+             document.body.style.backgroundColor = "white";
+         }, false);
+      </script>
+      <script>
+         //const url = "https://nodejs-simple-message-relay.herokuapp.com/send/equilibrium?api_key=Gato"
+         const url = "https://relay.equilibrium.fabianvillena.tk/socket/equilibrium?api_key=Gato"
+         
+         function post_to_relay(data) {
+         $.ajax({
+         type: "POST",
+         url: url,
+         data: data
+         });
+         
+         }
+         
+         var limitarEnviosRelay_Orientation=0;
+         var lista_Orientation=[];
+         function handleOrientation(event) {   
+            var orientation = {
+                  "Fecha:":Date.now(),
+                  'alpha':event.alpha,
+                  'beta':event.beta,
+                  'gamma':event.gamma
+               }
+            lista_Orientation.push(orientation)
+            console.log(orientation)
+            if(Date.now() - limitarEnviosRelay_Orientation > 1000) {             
+               post_to_relay({'orientationLista':lista_Orientation})//Se envía esta que es la valiosa y se quiere guardar
+               post_to_relay({'orientation':orientation})//Se envía esta también para los gráficos, no es tan importante así que se envía un solo valor no mas
+               limitarEnviosRelay_Orientation = Date.now();//Resetear variable
+               lista_Orientation=[];//Resetear variable
+            }
+         }
+
+         var limitarEnviosRelay_Motion=0;
+         var lista_Motion=[];
+         function handleMotion(event) {
+            var motion = {
+                  "Fecha:":Date.now(),
+                  'acceleration_x':event.acceleration.x,
+                  'acceleration_y':event.acceleration.y,
+                  'acceleration_z':event.acceleration.z,
+                  'rotation_alpha':event.rotationRate.alpha,
+                  'rotation_beta':event.rotationRate.beta,
+                  'rotation_gamma':event.rotationRate.gamma,
+               }
+            lista_Motion.push(motion)
+            console.log(motion)
+            if(Date.now() - limitarEnviosRelay_Motion > 1000) {   //Enviar todo junto cada un segundo
+               post_to_relay({'motionLista':lista_Motion})//Se envía esta que es la valiosa y se quiere guardar
+               post_to_relay({'motion':motion})//Se envía esta también para los gráficos, no es tan importante así que se envía un solo valor no mas
+               limitarEnviosRelay_Motion = Date.now();//Resetear variable
+               lista_motion=[];//Resetear variable
+            }         
+         }
+         
+         //var dict = [];
+         //function handleClick(event) {//Agregada por Víctor
+         //      dict.push({
+         //                  key:   "keyName",
+         //                  value: "the value"
+         //               });
+         //post_to_relay({'PruebaVic':dict})
+         //console.log("hola")       
+         //}
+
+         window.addEventListener("deviceorientation", handleOrientation, true);
+         window.addEventListener("devicemotion", handleMotion, true);
+         window.addEventListener('deviceorientation', handleBolita, true);
+         //window.addEventListener("click", handleClick, true)//Agregada por Víctor
+
+      </script>
+   </body>
+</html>
