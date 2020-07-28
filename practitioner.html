@@ -27,9 +27,20 @@
 
         </div>
         <div class="footer"></div> 
-
         
-        <input onclick="botonEmpezarTerminar()" type="button" value="Comenzar a guardar datos" id="myButton1"></input>
+     
+          <form id="frm1" action="/action_page.php">
+            Nombre: <input type="text" id="fname"><br>
+            Apellido: <input type="text" id="lname"><br>
+            Edad: <input type="text" id="age"><br>
+            Rut: <input type="text" id="rut"><br><br>
+            <input type="button" onclick="formulario()" value="GuardarDatos" id="myButton2">
+          </form>
+
+          <br>
+          <input onclick="botonEmpezarTerminarCalibrar()" type="button" value="Comenzar a guardar datos Calibración" id="myButton0"></input>
+          <br>
+          <input onclick="botonEmpezarTerminarSesion()" type="button" value="Comenzar a guardar datos Sesión" id="myButton1"></input>
           <form onsubmit="download(this['name'].value)">
             <input type="text" name="name" value="NombreArchivo.txt">
             <input type="submit" value="Download">
@@ -134,11 +145,14 @@
       </script>
 
 
+
+
       <script>
          const url = 'https://relay.equilibrium.fabianvillena.tk'; // Change to the URI of your Socket.io server
          const socket = io.connect( url, { reconnection: true } ); // Set false to disable automatic reconnection
          var dict_Output_MotionLista=[];
          var dict_Output_OrientationLista=[];
+         var dict_Output_Total=[];
          var bulean_GrabarTerminar=false;
 
          ;(function($) {
@@ -220,7 +234,19 @@
          })( window.jQuery );
 
       </script>
+      
 <script>
+    
+
+    function randomString(length) {
+            var result = '';
+            var chars='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            var length = 10;
+            for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+            return result;
+        }
+
+
          //function handleClick(event) {//Agregada por Víctor
          //var fs = require('fs');
          //var file = fs.createWriteStream('output.txt');
@@ -232,28 +258,66 @@
          //console.log("handleClick")       
          //}
 
-        //window.addEventListener("click", handleClick, true)//Agregada por Víctor
-        function botonEmpezarTerminar() // no ';' here
+        //window.addEventListener("click", handleClick, true)//Agregada por Víctor        
+        
+        
+        
+        function botonEmpezarTerminarCalibrar() // no ';' here
+        {
+            var elem = document.getElementById("myButton0");
+            if (elem.value=="Detener guardado de datos Calibración") {
+                elem.value = "Calibración finalizada";
+                document.getElementById("myButton0").disabled = true;
+                bulean_GrabarTerminar=false;
+            }
+            if (elem.value=="Comenzar a guardar datos Calibración") {
+                elem.value = "Detener guardado de datos Calibración";
+                var Status = "Comienza Calibración";
+                dict_Output_MotionLista.push({Status})
+                dict_Output_OrientationLista.push({Status})
+                bulean_GrabarTerminar=true;
+            }
+        }
+
+
+
+        function botonEmpezarTerminarSesion() // no ';' here
         {
             var elem = document.getElementById("myButton1");
-            if (elem.value=="Detener guardado de datos") {
+            if (elem.value=="Detener guardado de datos Sesión") {
                 elem.value = "Sesión finalizada";
                 document.getElementById("myButton1").disabled = true;
-                bulean_GrabarTerminar=false
+                bulean_GrabarTerminar=false;
             }
-            if (elem.value=="Comenzar a guardar datos") {
-                elem.value = "Detener guardado de datos";      
+            if (elem.value=="Comenzar a guardar datos Sesión") {
+                elem.value = "Detener guardado de datos Sesión"; 
+                var Status = "Comienza Sesión";
+                dict_Output_MotionLista.push({Status})   
+                dict_Output_OrientationLista.push({Status})      
                 bulean_GrabarTerminar=true
             }
+        }
+
+        function formulario(){
+            var fname = document.getElementById("fname").value;
+            var lname = document.getElementById("lname").value;
+            var edad = document.getElementById("age").value;
+            var rut = document.getElementById("rut").value;
+            //alert(input);
+
+            dict_Output_Total.push({fname,lname,edad,rut})
+            document.getElementById("myButton2").disabled = true;
+            return(false);
         }
 
 </script>
 <script>
 function download(filename) {
     //var str = [{"UserName":"xxx","Rolename":"yyy"}]; // your response in a string
-    
+  dict_Output_Total.push(dict_Output_MotionLista)
+  dict_Output_Total.push(dict_Output_OrientationLista)
   var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(dict_Output_MotionLista)));
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(dict_Output_Total)));
   //fs.writeFileSync('./data.json', JSON.stringify(str, null, 2) , 'utf-8');
   element.setAttribute('download', filename);
 
@@ -263,15 +327,18 @@ function download(filename) {
   element.click();
 
   document.body.removeChild(element);
+  return(false);//esto era para que no se reiniciara la pagina pero no sirve
 }
-
 </script>
+
 
 <script>
         $(document).ready(function(){
             const domain = 'meet.jit.si';
-const options = {
-    roomName: 'JitsiMeetAPIExample',
+            
+const options = {   
+    //roomName: stringAleatorio,
+    roomName: randomString(),
     width: 700,
     height: 700,
     parentNode: document.querySelector('#meet')
