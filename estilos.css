@@ -1,7 +1,6 @@
 .headerer{
     width: 100%;
     height: 100px;
-    background-color: blue ;
     margin: 20px;
     float: left;
 }
@@ -15,7 +14,6 @@
 .box1{
     width: 150px;
     height: 150px;
-    background-color: aquamarine;
     margin: 30px;
     float: right;
 }
@@ -28,9 +26,17 @@
 
 }
 
+
+.pad {
+    padding-left: 10px;
+    padding-right: 10px;
+   }
+   .full {
+      width: 100%; 
+     }
+
 .content{
     width: 65%;
-    background-color: powderblue;
     height: 800px;
     margin: 5px;
     padding: 20px;
@@ -39,7 +45,6 @@
     width: 100%;
     height: 50px;
     margin: 5px;
-    background-color: purple;
 }
 h4{
     text-align: center;
@@ -49,10 +54,8 @@ h2{
 }
 #titulo{
     text-align: center;
-    color: lightyellow;
     padding: 20px;
 }
 #video{
     text-align: center;
-    color: palevioletred;
 }
