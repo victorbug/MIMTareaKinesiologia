@@ -109,6 +109,7 @@ border-radius: 100%;
          }
          
          var limitarEnviosRelay_Orientation=0;
+         var limitarEnviosRelay_Orientation_Grafico=0;
          var lista_Orientation=[];
          function handleOrientation(event) {   
             var orientation = {
@@ -119,15 +120,19 @@ border-radius: 100%;
                }
             lista_Orientation.push(orientation)
             console.log(orientation)
-            if(Date.now() - limitarEnviosRelay_Orientation > 1000) {             
-               post_to_relay({'orientationLista':lista_Orientation})//Se envía esta que es la valiosa y se quiere guardar
+            if(Date.now() - limitarEnviosRelay_Orientation_Grafico > 50) {  //20Hz
                post_to_relay({'orientation':orientation})//Se envía esta también para los gráficos, no es tan importante así que se envía un solo valor no mas
+               limitarEnviosRelay_Orientation_Grafico = Date.now();//Resetear variable
+            }
+            if(Date.now() - limitarEnviosRelay_Orientation > 1000) {             
+               post_to_relay({'orientationLista':lista_Orientation})//Se envía esta que es la valiosa y se quiere guardar               
                limitarEnviosRelay_Orientation = Date.now();//Resetear variable
                lista_Orientation=[];//Resetear variable
             }
          }
 
          var limitarEnviosRelay_Motion=0;
+         var limitarEnviosRelay_Motion_Grafico=0;
          var lista_Motion=[];
          function handleMotion(event) {
             var motion = {
@@ -141,9 +146,12 @@ border-radius: 100%;
                }
             lista_Motion.push(motion)
             console.log(motion)
-            if(Date.now() - limitarEnviosRelay_Motion > 1000) {   //Enviar todo junto cada un segundo
-               post_to_relay({'motionLista':lista_Motion})//Se envía esta que es la valiosa y se quiere guardar
+            if(Date.now() - limitarEnviosRelay_Motion_Grafico > 50) { //20Hz
                post_to_relay({'motion':motion})//Se envía esta también para los gráficos, no es tan importante así que se envía un solo valor no mas
+               limitarEnviosRelay_Motion_Grafico = Date.now();//Resetear variable
+            }
+            if(Date.now() - limitarEnviosRelay_Motion > 1000) {   //Enviar todo junto cada un segundo
+               post_to_relay({'motionLista':lista_Motion})//Se envía esta que es la valiosa y se quiere guardar               
                limitarEnviosRelay_Motion = Date.now();//Resetear variable
                lista_motion=[];//Resetear variable
             }         
