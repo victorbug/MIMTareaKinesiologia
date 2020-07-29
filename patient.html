@@ -120,7 +120,7 @@ border-radius: 100%;
                }
             lista_Orientation.push(orientation)
             console.log(orientation)
-            if(Date.now() - limitarEnviosRelay_Orientation_Grafico > 50) {  //20Hz
+            if(Date.now() - limitarEnviosRelay_Orientation_Grafico > 500) {  //20Hz
                post_to_relay({'orientation':orientation})//Se envía esta también para los gráficos, no es tan importante así que se envía un solo valor no mas
                limitarEnviosRelay_Orientation_Grafico = Date.now();//Resetear variable
             }
@@ -146,7 +146,7 @@ border-radius: 100%;
                }
             lista_Motion.push(motion)
             console.log(motion)
-            if(Date.now() - limitarEnviosRelay_Motion_Grafico > 50) { //20Hz
+            if(Date.now() - limitarEnviosRelay_Motion_Grafico > 500) { //20Hz
                post_to_relay({'motion':motion})//Se envía esta también para los gráficos, no es tan importante así que se envía un solo valor no mas
                limitarEnviosRelay_Motion_Grafico = Date.now();//Resetear variable
             }
